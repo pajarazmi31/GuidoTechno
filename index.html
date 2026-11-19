@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="csrf-token" content="{{ csrf_token() }}" />
   <title>PT. Guido Techno — Solusi Teknologi & Transformasi Digital Terpercaya</title>
   <meta name="description" content="PT. Guido Techno adalah perusahaan teknologi informasi yang menyediakan solusi pengembangan perangkat lunak, infrastruktur cloud, dan transformasi digital bisnis di Indonesia." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,10 +18,23 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <!-- Vite Assets (Tailwind CSS) -->
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
-
   <!-- Main CSS (dari folder public/css/style.css) -->
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+  
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: "Plus Jakarta Sans", sans-serif; }
+    .bg-tech-grid {
+      background-color: #F2F7FF;
+      background-image:
+        linear-gradient(rgba(11,64,156,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(11,64,156,.045) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+    .reveal { opacity: 1; transform: none; }
+    .portfolio-item.is-hidden { display: none; }
+  </style>
+
 </head>
 
 <body class="bg-[#F2F7FF] text-[#10316B] antialiased selection:bg-[#FDBE34] selection:text-[#10316B]">
@@ -31,7 +45,7 @@
       <div class="flex items-center justify-between">
         <!-- Logo Kiri -->
         <a href="#beranda" class="flex items-center gap-3 group focus:outline-none">
-          <img src="{{ asset('assets/images/logo.png') }}" alt="Logo PT. Guido Techno" class="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <img src="assets/images/logo.png" alt="Logo PT. Guido Techno" class="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
         </a>
 
         <!-- Menu Desktop Kanan -->
@@ -222,7 +236,7 @@
           <!-- Tentang Perusahaan -->
           <div class="lg:col-span-6 space-y-6 reveal">
             <div class="rounded-2xl overflow-hidden shadow-lg border border-[#10316B]/10">
-              <img src="{{ asset('assets/images/logo.png') }}" alt="Kolaborasi Tim PT. Guido Techno" class="w-full h-65 object-cover" />
+              <img src="assets/images/logo.png" alt="Kolaborasi Tim PT. Guido Techno" class="w-full h-65 object-cover" />
             </div>
             <div class="space-y-4">
               <h3 class="text-2xl font-bold text-[#10316B]">Deskripsi Usaha</h3>
@@ -486,7 +500,7 @@
               <p class="text-sm text-[#10316B]/75 leading-relaxed mb-6 flex-1">
                 Penerapan arsitektur hybrid cloud terbukti mampu menekan biaya pemeliharaan server hingga 35% tanpa mengorbankan standar kepatuhan regulasi data.
               </p>
-              <a href="{{ url('/berita/detail-berita') }}" class="inline-flex items-center gap-2 text-sm font-bold text-[#0B409C] hover:text-[#10316B] transition-colors">
+              <a href="#berita" class="inline-flex items-center gap-2 text-sm font-bold text-[#0B409C] hover:text-[#10316B] transition-colors">
                 <span>Baca Selengkapnya</span>
                 <i class="fa-solid fa-arrow-right text-xs"></i>
               </a>
@@ -748,7 +762,7 @@
 
         <a href="#beranda" class="inline-flex flex-col items-start gap-2">
           <img
-            src="{{ asset('assets/images/logo.png') }}"
+            src="assets/images/logo.png"
             alt="Logo PT. Guido Techno"
             class="h-16 w-auto object-contain bg-white p-2 rounded-lg"
           />
@@ -938,7 +952,7 @@
     <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/60">
 
       <p class="text-center sm:text-left">
-        &copy; {{ date('Y') }} PT. Guido Techno. All rights reserved.
+        &copy; <span id="current-year"></span> PT. Guido Techno. All rights reserved.
       </p>
 
     </div>
@@ -953,8 +967,80 @@
   </button>
 
   <!-- Scripts (dari folder public/js/) -->
-  <script type="module" src="{{ asset('js/main.js') }}"></script>
-  <script type="module" src="{{ asset('js/portfolio.js') }}"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuButton = document.getElementById("mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const menuIcon = document.getElementById("menu-icon");
+
+      if (menuButton && mobileMenu) {
+        menuButton.addEventListener("click", function () {
+          const isHidden = mobileMenu.classList.toggle("hidden");
+          menuButton.setAttribute("aria-expanded", String(!isHidden));
+          menuButton.setAttribute("aria-label", isHidden ? "Buka Menu" : "Tutup Menu");
+          if (menuIcon) {
+            menuIcon.classList.toggle("fa-bars", isHidden);
+            menuIcon.classList.toggle("fa-xmark", !isHidden);
+          }
+        });
+
+        mobileMenu.querySelectorAll("a").forEach(function (link) {
+          link.addEventListener("click", function () {
+            mobileMenu.classList.add("hidden");
+            menuButton.setAttribute("aria-expanded", "false");
+            menuButton.setAttribute("aria-label", "Buka Menu");
+            if (menuIcon) {
+              menuIcon.classList.add("fa-bars");
+              menuIcon.classList.remove("fa-xmark");
+            }
+          });
+        });
+      }
+
+      const filterButtons = document.querySelectorAll(".filter-btn");
+      const portfolioItems = document.querySelectorAll(".portfolio-item");
+
+      filterButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          const category = button.dataset.filter;
+
+          filterButtons.forEach(function (item) {
+            item.classList.remove("active", "bg-[#0B409C]", "text-white");
+            item.classList.add("bg-white", "text-[#10316B]");
+          });
+
+          button.classList.add("active", "bg-[#0B409C]", "text-white");
+          button.classList.remove("bg-white", "text-[#10316B]");
+
+          portfolioItems.forEach(function (item) {
+            const matches = category === "all" || item.dataset.category === category;
+            item.classList.toggle("is-hidden", !matches);
+          });
+        });
+      });
+
+      const backToTop = document.getElementById("back-to-top");
+      function updateBackToTop() {
+        if (!backToTop) return;
+        const visible = window.scrollY > 400;
+        backToTop.classList.toggle("opacity-0", !visible);
+        backToTop.classList.toggle("pointer-events-none", !visible);
+      }
+      window.addEventListener("scroll", updateBackToTop);
+      updateBackToTop();
+
+      if (backToTop) {
+        backToTop.addEventListener("click", function () {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
+
+      const year = document.getElementById("current-year");
+      if (year) year.textContent = new Date().getFullYear();
+    });
+  </script>
+
 </body>
 
 </html>
